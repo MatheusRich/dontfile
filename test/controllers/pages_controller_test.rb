@@ -79,46 +79,6 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert @page.file.attached?
   end
 
-  test 'should not upload file bigger than max size allowed' do
-    assert_not @page.file.attached?
-
-    reset_max_file_size_constant
-    assert_equal 0, Page::MAX_FILE_SIZE
-
-    patch "/#{@page.url}", params: {
-      page: {
-        url: "/#{@page.url}",
-        file: fixture_file_upload('public/dontfile.png', 'image/png')
-      }
-    }
-    assert_response :not_acceptable
-    @page.reload
-
-    assert_not @page.file.attached?
-
-    reset_max_file_size_constant(100.0.megabytes)
-    assert_equal 100.0.megabytes, Page::MAX_FILE_SIZE
-  end
-
-  test 'should delete file' do
-    @page.file.attach(
-      io: File.open('public/dontfile.png'),
-      filename: 'dontfile.png'
-    )
-    @page.save!
-
-    assert @page.file.attached?
-
-    assert_difference 'ActiveStorage::Attachment.count', -1 do
-      delete delete_file_path, params: {
-        url: @page.url
-      }
-    end
-
-    @page.reload
-    assert_not @page.file.attached?
-  end
-
   test 'should create a zip file' do
     req_url = "#{@page.url}.zip"
     expected_zip_file = "tmp/#{req_url}"

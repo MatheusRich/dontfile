@@ -25,12 +25,12 @@
             <%= icon('far', 'arrow-alt-circle-down') %>
           </a>
 
-          <%= button_to delete_file_path,
-            method: :delete,
-            params: { url: @page.url },
-            title: 'Delete File',
-            data: { confirm: "Are you sure?" },
-            class: 'button' do %>
+          <%= button_to delete_page_file_path,
+                        method: :delete,
+                        params: { url: @page.url },
+                        title: 'Delete File',
+                        data: { confirm: "Are you sure?" },
+                        class: 'button' do %>
             <%= icon('far', 'trash-alt') %>
           <% end %>
         </div>
